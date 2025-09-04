@@ -3,8 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
@@ -29,6 +30,25 @@ class User
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Role $role = null;
+
+    /**
+     * @var Collection<int, Vehicle>
+     */
+    #[ORM\OneToMany(targetEntity: Vehicle::class, mappedBy: 'merchant')]
+    private Collection $vehicles;
+
+    /**
+     * @var Collection<int, Vehicle>
+     */
+    #[ORM\ManyToMany(targetEntity: Vehicle::class)]
+    #[ORM\JoinTable(name: "followed_vehicles")]
+    private Collection $followedVehicles;
+
+    public function __construct()
+    {
+        $this->vehicles = new ArrayCollection();
+        $this->followedVehicles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -103,5 +123,56 @@ class User
     public function getRoles(): array
     {
         return [$this->role?->getName() ?? 'ROLE_USER'];
+    }
+
+    /**
+     * @return Collection<int, Vehicle>
+     */
+    public function getVehicles(): Collection
+    {
+        return $this->vehicles;
+    }
+
+    public function addVehicle(Vehicle $vehicle): static
+    {
+        if (!$this->vehicles->contains($vehicle)) {
+            $this->vehicles->add($vehicle);
+            $vehicle->setMerchant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVehicle(Vehicle $vehicle): static
+    {
+        if ($this->vehicles->removeElement($vehicle)) {
+            // set the owning side to null (unless already changed)
+            if ($vehicle->getMerchant() === $this) {
+                $vehicle->setMerchant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getFollowedVehicles(): Collection
+    {
+        return $this->followedVehicles;
+    }
+
+    public function addFollowedVehicle(Vehicle $vehicle): static
+    {
+        if (!$this->followedVehicles->contains($vehicle)) {
+            $this->followedVehicles->add($vehicle);
+        }
+
+        return $this;
+    }
+
+    public function removeFollowedVehicle(Vehicle $vehicle): static
+    {
+        $this->followedVehicles->removeElement($vehicle);
+
+        return $this;
     }
 }
