@@ -6,9 +6,11 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -146,7 +148,6 @@ class User
     public function removeVehicle(Vehicle $vehicle): static
     {
         if ($this->vehicles->removeElement($vehicle)) {
-            // set the owning side to null (unless already changed)
             if ($vehicle->getMerchant() === $this) {
                 $vehicle->setMerchant(null);
             }
@@ -155,6 +156,9 @@ class User
         return $this;
     }
 
+    /**
+     * @return Collection<int, Vehicle>
+     */
     public function getFollowedVehicles(): Collection
     {
         return $this->followedVehicles;
@@ -174,5 +178,10 @@ class User
         $this->followedVehicles->removeElement($vehicle);
 
         return $this;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // no-op
     }
 }
