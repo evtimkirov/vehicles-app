@@ -65,5 +65,8 @@ class UserFixtures extends Fixture
         $manager->persist($merchantUser);
         $manager->persist($buyerUser);
         $manager->flush();
+
+        $this->addReference('user_merchant', $merchantUser);
+        $this->addReference('user_buyer', $buyerUser);
     }
 }
