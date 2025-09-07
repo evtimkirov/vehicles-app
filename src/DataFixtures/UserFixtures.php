@@ -5,21 +5,15 @@ namespace App\DataFixtures;
 use App\Entity\Role;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserFixtures extends Fixture
+class UserFixtures extends Fixture implements DependentFixtureInterface
 {
-    /**
-     * Merchant role
-     */
-    public const MERCHANT_ROLE_REF = 'role_merchant';
-
-    /**
-     * Buyer role
-     */
-    public const BUYER_ROLE_REF = 'role_buyer';
+    public const MERCHANT_USER_REF = 'user_merchant';
+    public const BUYER_USER_REF = 'user_buyer';
 
     /**
      * @param UserPasswordHasherInterface $hasher
@@ -39,34 +33,45 @@ class UserFixtures extends Fixture
 
         // User with merchant role
         $merchantUser = new User();
-        $merchantUser->setEmail(self::MERCHANT_ROLE_REF . '@mypos.com');
+        $merchantUser->setEmail(self::MERCHANT_USER_REF . '@mypos.com');
         $merchantUser->setPassword(
             $this->hasher->hashPassword($merchantUser, 'password')
         );
         $merchantUser->setFirstName($faker->firstName);
         $merchantUser->setLastName($faker->lastName);
         $merchantUser->setRole(
-            $this->getReference(self::MERCHANT_ROLE_REF, Role::class)
+            $this->getReference(RoleFixtures::MERCHANT_ROLE_REF, Role::class)
         );
+        $manager->persist($merchantUser);
+        $this->addReference(self::MERCHANT_USER_REF, $merchantUser);
 
         // User with buyer role
         $buyerUser = new User();
-        $buyerUser->setEmail(self::BUYER_ROLE_REF . '@mypos.com');
+        $buyerUser->setEmail(self::BUYER_USER_REF . '@mypos.com');
         $buyerUser->setPassword(
             $this->hasher->hashPassword($buyerUser, 'password')
         );
         $buyerUser->setFirstName($faker->firstName);
         $buyerUser->setLastName($faker->lastName);
         $buyerUser->setRole(
-            $this->getReference(self::BUYER_ROLE_REF, Role::class)
+            $this->getReference(RoleFixtures::BUYER_ROLE_REF, Role::class)
         );
+        $manager->persist($buyerUser);
+        $this->addReference(self::BUYER_USER_REF, $buyerUser);
 
         // Prepare and create
-        $manager->persist($merchantUser);
-        $manager->persist($buyerUser);
         $manager->flush();
+    }
 
-        $this->addReference('user_merchant', $merchantUser);
-        $this->addReference('user_buyer', $buyerUser);
+    /**
+     * Load Role before User
+     *
+     * @return \class-string[]
+     */
+    public function getDependencies(): array
+    {
+        return [
+            RoleFixtures::class,
+        ];
     }
 }

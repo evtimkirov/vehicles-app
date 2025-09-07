@@ -8,6 +8,9 @@ use Doctrine\Persistence\ObjectManager;
 
 class RoleFixtures extends Fixture
 {
+    public const MERCHANT_ROLE_REF = 'role_merchant';
+    public const BUYER_ROLE_REF = 'role_buyer';
+
     /**
      * Role seeder
      *
@@ -18,18 +21,17 @@ class RoleFixtures extends Fixture
     {
         // Merchant role
         $merchant = new Role();
-        $merchant->setName(UserFixtures::MERCHANT_ROLE_REF);
+        $merchant->setName(self::MERCHANT_ROLE_REF);
         $manager->persist($merchant);
-        $manager->flush();
+        $this->addReference(self::MERCHANT_ROLE_REF, $merchant);
 
         // Bayer role
         $buyer = new Role();
-        $buyer->setName(UserFixtures::BUYER_ROLE_REF);
+        $buyer->setName(self::BUYER_ROLE_REF);
         $manager->persist($buyer);
-        $manager->flush();
+        $this->addReference(self::BUYER_ROLE_REF, $buyer);
 
-        // References
-        $this->addReference(UserFixtures::MERCHANT_ROLE_REF, $merchant);
-        $this->addReference(UserFixtures::BUYER_ROLE_REF, $buyer);
+        // Execute
+        $manager->flush();
     }
 }
