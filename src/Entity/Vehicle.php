@@ -35,7 +35,7 @@ abstract class Vehicle
     private ?int $quantity = null;
 
     #[ORM\ManyToOne(inversedBy: 'vehicles')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?User $merchant = null;
 
     public function getId(): ?int
