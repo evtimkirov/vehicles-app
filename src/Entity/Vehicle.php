@@ -23,7 +23,7 @@ use ApiPlatform\Metadata\Get;
     operations: [
         new Get(),
         new Get(uriTemplate: '/vehicles/{id}'),
-        new Post(controller: VehicleController::class)
+        new Post(controller: VehicleController::class . '::store'),
     ]
 )]
 abstract class Vehicle
