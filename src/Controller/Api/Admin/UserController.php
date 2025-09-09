@@ -3,39 +3,107 @@
 namespace App\Controller\Api\Admin;
 
 use App\Entity\User;
+use App\Entity\Vehicle;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Request;
 
-final class UserController extends AbstractController
+class UserController extends AbstractController
 {
     /**
-     * Get the followed vehicles
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param int $id
-     * @return JsonResponse
+     * List with the followed vehicles by logged-in user
      */
-    #[Route('/api/v1/users/{id}/vehicles', methods: ['GET'])]
-    public function getUserVehicles(EntityManagerInterface $entityManager, int $id): JsonResponse
+    public function listFollowed(): JsonResponse
     {
-        $user = $entityManager->getRepository(User::class)->find($id);
-
+        /** @var User $user */
+        $user = $this->getUser();
         if (!$user) {
-            return $this->json(
-                [
-                    'status' => 'error',
-                    'message' => 'User not found',
-                ],
-                404
-            );
+            return $this->json(['status' => 'error', 'message' => 'Unauthorized'], 401);
         }
+
+        $vehicles = $user->getFollowedVehicles()->map(fn (Vehicle $v) => [
+            'id' => $v->getId(),
+            'brand' => $v->getBrand(),
+            'model' => $v->getModel(),
+            'price' => $v->getPrice(),
+        ])->toArray();
 
         return $this->json([
             'status' => 'success',
-            'user_id' => $id,
-            'vehicles' => $user->getFollowedVehicles(),
+            'data' => $vehicles,
+        ]);
+    }
+
+    /**
+     * Follow a vehicle
+     */
+    public function follow(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['status' => 'error', 'message' => 'Unauthorized'], 401);
+        }
+
+        $data = json_decode($request->getContent(), true);
+        $vehicleId = $data['vehicleId'] ?? null;
+
+        if (!$vehicleId) {
+            return $this->json(['status' => 'error', 'message' => 'vehicleId is required'], 400);
+        }
+
+        $vehicle = $entityManager->getRepository(Vehicle::class)->find($vehicleId);
+        if (!$vehicle) {
+            return $this->json(['status' => 'error', 'message' => 'Vehicle not found'], 404);
+        }
+
+        $user->addFollowedVehicle($vehicle);
+        $entityManager->flush();
+
+        return $this->json([
+            'status' => 'success',
+            'message' => 'Vehicle followed',
+            'data' => [
+                'user_id' => $user->getId(),
+                'vehicle_id' => $vehicleId,
+            ]
+        ]);
+    }
+
+    /**
+     * Unfollow a vehicle
+     */
+    public function unfollow(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['status' => 'error', 'message' => 'Unauthorized'], 401);
+        }
+
+        $data = json_decode($request->getContent(), true);
+        $vehicleId = $data['vehicleId'] ?? null;
+
+        if (!$vehicleId) {
+            return $this->json(['status' => 'error', 'message' => 'vehicleId is required'], 400);
+        }
+
+        $vehicle = $entityManager->getRepository(Vehicle::class)->find($vehicleId);
+        if (!$vehicle) {
+            return $this->json(['status' => 'error', 'message' => 'Vehicle not found'], 404);
+        }
+
+        $user->removeFollowedVehicle($vehicle);
+        $entityManager->flush();
+
+        return $this->json([
+            'status' => 'success',
+            'message' => 'Vehicle unfollowed',
+            'data' => [
+                'user_id' => $user->getId(),
+                'vehicle_id' => $vehicleId,
+            ]
         ]);
     }
 }

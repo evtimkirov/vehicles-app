@@ -22,8 +22,14 @@ use App\Controller\Api\ForgotPasswordController;
         new Post(uriTemplate: '/registration', controller: RegistrationController::class),
         new Post(uriTemplate: '/login'),
         new Post(uriTemplate: '/forgot-password', controller: ForgotPasswordController::class),
-        new Get(),
-        new Get(uriTemplate: '/users/{id}/vehicles', controller: UserController::class . '::getUserVehicles')
+
+        new Get(), // GET /users/{id}
+        new Get(uriTemplate: '/users/{id}/vehicles', controller: UserController::class . '::getUserVehicles'),
+
+        // Follow / Unfollow
+        new Post(uriTemplate: '/users/vehicles/follow', controller: UserController::class . '::follow'),
+        new Post(uriTemplate: '/users/vehicles/unfollow', controller: UserController::class . '::unfollow'),
+        new Get(uriTemplate: '/users/vehicles/followed', controller: UserController::class . '::listFollowed'),
     ]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
