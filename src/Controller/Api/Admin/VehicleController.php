@@ -13,6 +13,13 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class VehicleController extends AbstractController
 {
+    /**
+     * Get all vehicles
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param VehicleSerializer $vehicleSerializer
+     * @return JsonResponse
+     */
     #[Route('/api/v1/vehicles', name: 'vehicles', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager, VehicleSerializer $vehicleSerializer): JsonResponse
     {
@@ -23,7 +30,6 @@ final class VehicleController extends AbstractController
             'data'   => $vehicleSerializer->serializeCollection($vehicles),
         ]);
     }
-
 
     /**
      * Store new vehicle
@@ -57,5 +63,33 @@ final class VehicleController extends AbstractController
                 'type'  => $data['type']
             ]
         ], 201);
+    }
+
+    /**
+     * Get single vehicle
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param int $id
+     * @return JsonResponse
+     */
+    #[Route('/api/v1/vehicles/{id}', name: 'vehicles_show', methods: ['GET'])]
+    public function show(EntityManagerInterface $entityManager, int $id): JsonResponse
+    {
+        $vehicle = $entityManager->getRepository(Vehicle::class)->find($id);
+
+        if (!$vehicle) {
+            return $this->json(['status' => 'error', 'message' => 'Vehicle not found'], 404);
+        }
+
+        return $this->json([
+            'status' => 'success',
+            'data'   => [
+                'id' => $vehicle->getId(),
+                'brand' => $vehicle->getBrand(),
+                'model' => $vehicle->getModel(),
+                'price' => $vehicle->getPrice(),
+                'quantity' => $vehicle->getQuantity(),
+            ],
+        ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\GetCollection;
 use App\Controller\Api\Admin\VehicleController;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,9 +22,9 @@ use ApiPlatform\Metadata\Get;
 ])]
 #[ApiResource(
     operations: [
-        new Get(),
-        new Get(uriTemplate: '/vehicles/{id}'),
-        new Post(controller: VehicleController::class . '::store'),
+        new Get(controller: VehicleController::class . '::show'), // GET /vehicles/{id}
+        new GetCollection(controller: VehicleController::class . '::index'), // GET /vehicles
+        new Post(controller: VehicleController::class . '::store'), // POST /vehicles
     ]
 )]
 abstract class Vehicle
