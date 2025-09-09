@@ -2,15 +2,31 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
+use App\Controller\Api\Admin\UserController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Controller\Api\RegistrationController;
+use App\Controller\Api\LoginController;
+use App\Controller\Api\ForgottenPasswordController;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: "users")]
+#[ApiResource(
+    operations: [
+        new Post(uriTemplate: '/registration', controller: RegistrationController::class),
+        new Post(uriTemplate: '/login', controller: LoginController::class),
+        new Post(uriTemplate: '/forgotten-password', controller: ForgottenPasswordController::class),
+        new Get(),
+        new Get(uriTemplate: '/users/{id}/vehicles', controller: UserController::class . '::getUserVehicles')
+    ]
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]

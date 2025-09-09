@@ -2,8 +2,12 @@
 
 namespace App\Entity;
 
+use App\Controller\Api\Admin\VehicleController;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
 
 #[ORM\Entity]
 #[ORM\Table(name: "vehicles")]
@@ -15,6 +19,13 @@ use Doctrine\ORM\Mapping as ORM;
     "truck" => Truck::class,
     "trailer" => Trailer::class,
 ])]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new Get(uriTemplate: '/vehicles/{id}'),
+        new Post(controller: VehicleController::class)
+    ]
+)]
 abstract class Vehicle
 {
     #[ORM\Id]
