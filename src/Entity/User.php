@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use App\Controller\Api\RegistrationController;
-use App\Controller\Api\ForgottenPasswordController;
+use App\Controller\Api\ForgotPasswordController;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: "users")]
@@ -21,7 +21,7 @@ use App\Controller\Api\ForgottenPasswordController;
     operations: [
         new Post(uriTemplate: '/registration', controller: RegistrationController::class),
         new Post(uriTemplate: '/login'),
-        new Post(uriTemplate: '/forgotten-password', controller: ForgottenPasswordController::class),
+        new Post(uriTemplate: '/forgot-password', controller: ForgotPasswordController::class),
         new Get(),
         new Get(uriTemplate: '/users/{id}/vehicles', controller: UserController::class . '::getUserVehicles')
     ]
