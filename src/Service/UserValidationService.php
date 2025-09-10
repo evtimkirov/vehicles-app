@@ -29,7 +29,6 @@ class UserValidationService
             'password' => [new Assert\NotBlank(), new Assert\Length(['min' => 6])],
             'first_name' => [new Assert\NotBlank(), new Assert\Length(['min' => 2])],
             'last_name' => [new Assert\NotBlank(), new Assert\Length(['min' => 2])],
-            'role' => [new Assert\NotBlank()],
         ]);
 
         $violations = $this->validator->validate($data, $constraints);
