@@ -28,7 +28,7 @@ final class RegistrationController extends AbstractController
             return new JsonResponse(['status' => 'error', 'errors' => $errors], 422);
         }
 
-        $role = $manager->getRepository(Role::class)->findOneBy(['name' => $data['role']]);
+        $role = $manager->getRepository(Role::class)->findOneBy(['name' => 'role_buyer']);
         if (!$role) {
             return new JsonResponse(['status' => 'error', 'errors' => ['role' => ['Invalid role']]], 400);
         }

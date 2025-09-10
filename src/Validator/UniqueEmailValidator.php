@@ -2,11 +2,19 @@
 
 namespace App\Validator;
 
+use App\Repository\UserRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 final class UniqueEmailValidator extends ConstraintValidator
 {
+    private UserRepository $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     public function validate(mixed $value, Constraint $constraint): void
     {
         /* @var UniqueEmail $constraint */
@@ -15,10 +23,12 @@ final class UniqueEmailValidator extends ConstraintValidator
             return;
         }
 
-        // TODO: implement the validation here
-        $this->context->buildViolation($constraint->message)
-            ->setParameter('{{ value }}', $value)
-            ->addViolation()
-        ;
+        $user = $this->userRepository->findOneBy(['email' => $value]);
+
+        if ($user) {
+            $this->context->buildViolation($constraint->message)
+                ->setParameter('{{ value }}', $value)
+                ->addViolation();
+        }
     }
 }
