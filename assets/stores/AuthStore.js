@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import axios from "axios";
+import api from "../utils/api";
 
 class AuthStore {
     user = null;
@@ -16,8 +17,8 @@ class AuthStore {
         this.error = null;
 
         try {
-            const response = await axios.post(
-                "/api/v1/login",
+            const response = await api.post(
+                "login",
                 { email, password }
             );
 
@@ -34,8 +35,8 @@ class AuthStore {
         this.error = null;
 
         try {
-            const response = await axios.post(
-                "/api/v1/registration",
+            const response = await api.post(
+                "registration",
                 {
                     first_name,
                     last_name,
@@ -56,8 +57,8 @@ class AuthStore {
         this.error = null;
 
         try {
-            const response = await axios.post(
-                "/api/v1/forgot-password",
+            const response = await api.post(
+                "forgot-password",
                 { email }
             );
 
