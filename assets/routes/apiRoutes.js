@@ -3,6 +3,7 @@ const API_ROUTES = {
         LOGIN: "login",
         REGISTER: "registration",
         FORGOT_PASSWORD: "forgot-password",
+        ROLE: "users/role"
     },
     VEHICLES: {
         LIST: "vehicles",

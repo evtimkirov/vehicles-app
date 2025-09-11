@@ -7,15 +7,17 @@ class AuthStore {
     loading = false;
     error = null;
     message = null;
+    token = null;
+    role = null;
 
     constructor() {
         makeAutoObservable(this);
 
         const token = localStorage.getItem("auth_token");
-
         if (token) {
             this.token = token;
             this.user = {};
+            this.fetchRole();
         }
     }
 
@@ -35,12 +37,29 @@ class AuthStore {
             this.user = { email };
 
             localStorage.setItem("auth_token", response.data.token);
+
+            await this.fetchRole();
         } catch (e) {
             this.error = e.response?.data?.message || "Invalid credentials";
-
             localStorage.removeItem("auth_token");
         } finally {
             this.loading = false;
+        }
+    };
+
+    fetchRole = async () => {
+        if (!this.token) return;
+
+        try {
+            const response = await api.get(API_ROUTES.AUTH.ROLE);
+
+            if (this.user) {
+                this.user.role = response.data.role;
+            } else {
+                this.user = { role: response.data.role };
+            }
+        } catch (e) {
+            console.error("Error fetching role:", e);
         }
     };
 
@@ -88,6 +107,8 @@ class AuthStore {
 
     logout = () => {
         this.user = null;
+        this.token = null;
+        localStorage.removeItem("auth_token");
     };
 }
 
