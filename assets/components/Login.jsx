@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import authStore from "../stores/AuthStore";
 import { useNavigate } from "react-router-dom";
+import AuthNavbar from "./AuthNavbar";
 
 const Login = observer(() => {
     const [email, setEmail] = useState("");
@@ -21,6 +22,7 @@ const Login = observer(() => {
 
     return (
         <div style={{ maxWidth: "400px", margin: "50px auto" }}>
+            <AuthNavbar />
             <h2>Login</h2>
             {authStore.error && <p style={{ color: "red" }}>{authStore.error}</p>}
             <form onSubmit={handleSubmit}>
