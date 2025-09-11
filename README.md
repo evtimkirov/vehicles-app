@@ -2,13 +2,17 @@
 
 ## How to set up
 
-### Backend Setup (Symfony)
-
 * Check out the project
 ```
 git checkout git@github.com:evtimkirov/vehicles-app.git
 cd vehicles_app
 ```
+
+You can just run `./scripts/setup.sh` for fast installation and setup or use follow one-by-one the next steps.
+
+_For the fast setup you should be sure that your MySQL username and password are `root:root`._
+
+### Backend Setup (Symfony)
 
 * Run the composer
 ```
