@@ -59,3 +59,32 @@ symfony server:start
 ```
 npm install && npm run dev
 ```
+
+## Default Users
+
+### The system comes with two pre-configured users for testing purposes:
+
+| Email  | Password | Role     | Access                                                                        |
+| ------------- |----------|----------|-------------------------------------------------------------------------------|
+| user_merchant@mypos.com | password | Merchant | Full access to all features, including creating vehicles.                     |
+| user_buyer@mypos.com	| password | Buyer    | 	Restricted access — cannot create vehicles. Can view and follow vehicles.    |
+
+Use these accounts to log in and test the application with different permissions.
+
+## API endpoints
+
+| Method | Endpoint                          | Controller / Description           | Access / Role    |
+| ------ | --------------------------------- | ---------------------------------- | ---------------- |
+| POST   | `/api/v1/registration`            | `RegistrationController::__invoke` | Public           |
+| POST   | `/api/v1/login`                   | `LoginController::login`           | Public           |
+| POST   | `/api/v1/forgot-password`         | `ForgotPasswordController`         | Public           |
+| GET    | `/api/v1/users/{id}`              | `UserController`                   | Protected        |
+| GET    | `/api/v1/users/{id}/vehicles`     | `UserController::getUserVehicles`  | Protected        |
+| GET    | `/api/v1/users/role`              | `UserController::getRole`          | Protected        |
+| POST   | `/api/v1/users/vehicles/follow`   | `UserController::follow`           | Buyer / Merchant |
+| POST   | `/api/v1/users/vehicles/unfollow` | `UserController::unfollow`         | Buyer / Merchant |
+| GET    | `/api/v1/users/vehicles/followed` | `UserController::listFollowed`     | Buyer / Merchant |
+| GET    | `/api/v1/vehicles`                | `VehicleController::index`         | Protected        |
+| GET    | `/api/v1/vehicles/{id}`           | `VehicleController::show`          | Protected        |
+| POST   | `/api/v1/vehicles`                | `VehicleController::store`         | Merchant only    |
+
