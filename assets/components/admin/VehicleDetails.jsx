@@ -13,15 +13,23 @@ const VehicleDetails = observer(() => {
     if (vehicleStore.loading) return <p>Loading...</p>;
     if (vehicleStore.error) return <p style={{ color: "red" }}>{vehicleStore.error}</p>;
 
-    const v = vehicleStore.vehicle;
-    if (!v) return <p>Vehicle not found</p>;
+    const vehicle = vehicleStore.vehicle;
+
+    if (!vehicle) return <p>Vehicle not found</p>;
 
     return (
         <div>
-            <h2>{v.name}</h2>
-            <p>{v.description}</p>
-            <button onClick={() => vehicleStore.followVehicle(v.id)}>Follow</button>
-            <button onClick={() => vehicleStore.unfollowVehicle(v.id)}>Unfollow</button>
+            <h2>{vehicle.brand}</h2>
+            <ul>
+                <li>
+                    <ul>
+                        <li>Model: {vehicle.model}</li>
+                        <li>Price: {vehicle.price}</li>
+                        <li>Quantity: {vehicle.quantity}</li>
+                    </ul>
+                </li>
+            </ul>
+            <button onClick={() => vehicleStore.followVehicle(vehicle.id)}>Follow</button>
             {vehicleStore.message && <p style={{ color: "green" }}>{vehicleStore.message}</p>}
         </div>
     );

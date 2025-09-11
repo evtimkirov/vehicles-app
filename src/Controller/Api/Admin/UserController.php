@@ -47,7 +47,7 @@ class UserController extends AbstractController
         }
 
         $data = json_decode($request->getContent(), true);
-        $vehicleId = $data['vehicleId'] ?? null;
+        $vehicleId = $data['id'] ?? null;
 
         if (!$vehicleId) {
             return $this->json(['status' => 'error', 'message' => 'vehicleId is required'], 400);
@@ -83,7 +83,7 @@ class UserController extends AbstractController
         }
 
         $data = json_decode($request->getContent(), true);
-        $vehicleId = $data['vehicleId'] ?? null;
+        $vehicleId = $data['id'] ?? null;
 
         if (!$vehicleId) {
             return $this->json(['status' => 'error', 'message' => 'vehicleId is required'], 400);

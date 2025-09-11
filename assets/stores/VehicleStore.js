@@ -67,7 +67,7 @@ class VehicleStore {
         this.loading = true;
         this.error = null;
         try {
-            await api.post("/api/v1/vehicles/follow", { id });
+            await api.post("users/vehicles/follow", { id });
 
             this.message = "Vehicle followed successfully";
 
@@ -84,7 +84,7 @@ class VehicleStore {
         this.loading = true;
         this.error = null;
         try {
-            await api.post("vehicles/unfollow", { id });
+            await api.post("users/vehicles/unfollow", { id });
 
             this.message = "Vehicle unfollowed successfully";
 
@@ -100,8 +100,9 @@ class VehicleStore {
     fetchFollowedVehicles = async () => {
         this.loading = true;
         this.error = null;
+
         try {
-            const response = await api.get("vehicles/followed");
+            const response = await api.get("users/vehicles/followed");
 
             this.followed = response.data.data ?? [];
         } catch (e) {

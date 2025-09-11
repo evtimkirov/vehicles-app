@@ -23,6 +23,7 @@ class AuthStore {
         this.loading = true;
         this.error = null;
         this.token = null;
+        this.message = null;
 
         try {
             const response = await api.post(
@@ -46,6 +47,7 @@ class AuthStore {
     register = async (first_name, last_name, email, password) => {
         this.loading = true;
         this.error = null;
+        this.message = null;
 
         try {
             const response = await api.post(
@@ -68,6 +70,7 @@ class AuthStore {
     forgotPassword = async (email) => {
         this.loading = true;
         this.error = null;
+        this.message = null;
 
         try {
             const response = await api.post(

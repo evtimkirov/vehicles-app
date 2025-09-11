@@ -17,7 +17,7 @@ const VehiclesList = observer(() => {
             <ul>
                 {vehicleStore.vehicles.map((vehicle) => (
                     <li key={vehicle.id}>
-                        <Link to={`/vehicles/${vehicle.id}`}>{vehicle.brand} {vehicle.model}</Link>
+                        <Link to={`/vehicles/${vehicle.id}`}>{vehicle.name} {vehicle.model}</Link>
                     </li>
                 ))}
             </ul>
