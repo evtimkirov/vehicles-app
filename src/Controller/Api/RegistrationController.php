@@ -2,8 +2,8 @@
 
 namespace App\Controller\Api;
 
+use App\Service\RegistrationService;
 use App\Service\UserValidationService;
-use App\Entity\User;
 use App\Entity\Role;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,38 +19,34 @@ final class RegistrationController extends AbstractController
         Request $request,
         UserValidationService $validatorService,
         UserPasswordHasherInterface $passwordHasher,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        RegistrationService $registrationService
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
 
+        // Validations
         $errors = $validatorService->validate($data);
         if (!empty($errors)) {
             return new JsonResponse(['status' => 'error', 'errors' => $errors], 422);
         }
 
+        // Role
         $role = $manager->getRepository(Role::class)->findOneBy(['name' => 'role_buyer']);
         if (!$role) {
             return new JsonResponse(['status' => 'error', 'errors' => ['role' => ['Invalid role']]], 400);
         }
 
-        $user = new User();
-        $user->setEmail($data['email']);
-        $user->setPassword($passwordHasher->hashPassword($user, $data['password']));
-        $user->setFirstName($data['first_name']);
-        $user->setLastName($data['last_name']);
-        $user->setRole($role);
-
-        $manager->persist($user);
-        $manager->flush();
+        // Create a new user
+        $user = $registrationService->registerUser($data, $role);
 
         return new JsonResponse([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'The user has been created successfully.',
-            'data' => [
-                'email' => $user->getEmail(),
+            'data'    => [
+                'email'      => $user->getEmail(),
                 'first_name' => $user->getFirstName(),
-                'last_name' => $user->getLastName(),
-                'role' => $role->getName() === 'role_merchant' ? 'merchant' : 'buyer',
+                'last_name'  => $user->getLastName(),
+                'role'       => $role->getName() === 'role_merchant' ? 'merchant' : 'buyer',
             ],
         ], 201);
     }
