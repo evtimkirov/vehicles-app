@@ -7,6 +7,7 @@ use App\Service\VehicleSerializer;
 use App\Service\VehicleValidationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -36,11 +37,20 @@ final class VehicleController extends AbstractController
      *
      * @param Request $request
      * @param VehicleValidationService $service
+     * @param Security $security
      * @return JsonResponse
      */
     #[Route('/api/v1/vehicles', methods: ['POST'])]
-    public function store(Request $request, VehicleValidationService $service): JsonResponse
+    public function store(Request $request, VehicleValidationService $service, Security $security): JsonResponse
     {
+        // Available only for merchants
+        if (!$security->isGranted('ROLE_MERCHANT')) {
+            return $this->json([
+                'status' => 'error',
+                'errors' => 'Only merchants can create vehicles.'
+            ], 403);
+        }
+
         $data = json_decode($request->getContent(), true);
 
         $errors = $service->validate($data);
