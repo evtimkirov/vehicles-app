@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
-import axios from "axios";
 import api from "../utils/api";
+import API_ROUTES from "../routes/apiRoutes";
 
 class AuthStore {
     user = null;
@@ -27,7 +27,7 @@ class AuthStore {
 
         try {
             const response = await api.post(
-                "login",
+                API_ROUTES.AUTH.LOGIN,
                 { email, password }
             );
 
@@ -51,7 +51,7 @@ class AuthStore {
 
         try {
             const response = await api.post(
-                "registration",
+                API_ROUTES.AUTH.REGISTER,
                 {
                     first_name,
                     last_name,
@@ -74,7 +74,7 @@ class AuthStore {
 
         try {
             const response = await api.post(
-                "forgot-password",
+                API_ROUTES.AUTH.FORGOT_PASSWORD,
                 { email }
             );
 

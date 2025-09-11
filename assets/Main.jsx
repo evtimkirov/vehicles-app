@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
-import routes from "./routes";
+import routes from "./routes/routes";
 
 const Main = () => {
     return (

@@ -1,10 +1,10 @@
-import VehiclesList from "./components/admin/VehiclesList";
-import VehicleDetails from "./components/admin/VehicleDetails";
-import CreateVehicle from "./components/admin/CreateVehicle";
-import FollowedVehicles from "./components/admin/FollowedVehicles";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import ForgotPassword from "./components/ForgotPassword";
+import VehiclesList from "../components/admin/VehiclesList";
+import VehicleDetails from "../components/admin/VehicleDetails";
+import CreateVehicle from "../components/admin/CreateVehicle";
+import FollowedVehicles from "../components/admin/FollowedVehicles";
+import Login from "../components/Login";
+import Register from "../components/Register";
+import ForgotPassword from "../components/ForgotPassword";
 
 const routes = [
     {

@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import api from "../utils/api";
+import API_ROUTES from "../routes/apiRoutes";
 
 class VehicleStore {
     vehicles = [];
@@ -19,7 +20,7 @@ class VehicleStore {
         this.loading = true;
         this.error = null;
         try {
-            const response = await api.get("vehicles");
+            const response = await api.get(API_ROUTES.VEHICLES.LIST);
 
             this.vehicles = response.data.data ?? [];
         } catch (e) {
@@ -34,7 +35,7 @@ class VehicleStore {
         this.loading = true;
         this.error = null;
         try {
-            const response = await api.get(`vehicles/${id}`);
+            const response = await api.get(API_ROUTES.VEHICLES.DETAIL(id));
 
             this.vehicle = response.data.data ?? null;
         } catch (e) {
@@ -50,7 +51,7 @@ class VehicleStore {
         this.error = null;
         this.message = null;
         try {
-            const response = await api.post("vehicles", payload);
+            const response = await api.post(API_ROUTES.VEHICLES.CREATE, payload);
 
             this.message = response.data.message ?? "Vehicle created successfully";
 
@@ -67,7 +68,7 @@ class VehicleStore {
         this.loading = true;
         this.error = null;
         try {
-            await api.post("users/vehicles/follow", { id });
+            await api.post(API_ROUTES.VEHICLES.FOLLOW, { id });
 
             this.message = "Vehicle followed successfully";
 
@@ -84,7 +85,7 @@ class VehicleStore {
         this.loading = true;
         this.error = null;
         try {
-            await api.post("users/vehicles/unfollow", { id });
+            await api.post(API_ROUTES.VEHICLES.UNFOLLOW, { id });
 
             this.message = "Vehicle unfollowed successfully";
 
@@ -102,7 +103,7 @@ class VehicleStore {
         this.error = null;
 
         try {
-            const response = await api.get("users/vehicles/followed");
+            const response = await api.get(API_ROUTES.VEHICLES.FOLLOWED);
 
             this.followed = response.data.data ?? [];
         } catch (e) {
