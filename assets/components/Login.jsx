@@ -1,16 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import authStore from "../stores/AuthStore";
+import { useNavigate } from "react-router-dom";
 
 const Login = observer(() => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        authStore.login(email, password);
+        await authStore.login(email, password);
     };
+
+    useEffect(() => {
+        if (authStore.user || localStorage.getItem("auth_token")) {
+            navigate("/vehicles");
+        }
+    }, [authStore.user, navigate]);
 
     return (
         <div style={{ maxWidth: "400px", margin: "50px auto" }}>

@@ -8,6 +8,7 @@ class VehicleStore {
     loading = false;
     error = null;
     message = null;
+    user = null;
 
     constructor() {
         makeAutoObservable(this);
@@ -18,7 +19,8 @@ class VehicleStore {
         this.loading = true;
         this.error = null;
         try {
-            const response = await api.get("/api/v2/vehicles");
+            const response = await api.get("vehicles");
+
             this.vehicles = response.data.data ?? [];
         } catch (e) {
             this.error = e.response?.data?.message || "Error loading vehicles";
@@ -32,7 +34,8 @@ class VehicleStore {
         this.loading = true;
         this.error = null;
         try {
-            const response = await api.get(`/api/v2/vehicles/${id}`);
+            const response = await api.get(`vehicles/${id}`);
+
             this.vehicle = response.data.data ?? null;
         } catch (e) {
             this.error = e.response?.data?.message || "Error loading vehicle";
@@ -47,8 +50,10 @@ class VehicleStore {
         this.error = null;
         this.message = null;
         try {
-            const response = await api.post("/api/v2/vehicles", payload);
+            const response = await api.post("vehicles", payload);
+
             this.message = response.data.message ?? "Vehicle created successfully";
+
             this.vehicles.push(response.data.data);
         } catch (e) {
             this.error = e.response?.data?.message || "Error creating vehicle";
@@ -63,8 +68,10 @@ class VehicleStore {
         this.error = null;
         try {
             await api.post("/api/v1/vehicles/follow", { id });
+
             this.message = "Vehicle followed successfully";
-            await this.fetchFollowedVehicles(); // рефреш на списъка
+
+            await this.fetchFollowedVehicles();
         } catch (e) {
             this.error = e.response?.data?.message || "Error following vehicle";
         } finally {
@@ -77,8 +84,10 @@ class VehicleStore {
         this.loading = true;
         this.error = null;
         try {
-            await api.post("/api/v1/vehicles/unfollow", { id });
+            await api.post("vehicles/unfollow", { id });
+
             this.message = "Vehicle unfollowed successfully";
+
             await this.fetchFollowedVehicles();
         } catch (e) {
             this.error = e.response?.data?.message || "Error unfollowing vehicle";
@@ -92,7 +101,8 @@ class VehicleStore {
         this.loading = true;
         this.error = null;
         try {
-            const response = await api.get("/api/v1/vehicles/followed");
+            const response = await api.get("vehicles/followed");
+
             this.followed = response.data.data ?? [];
         } catch (e) {
             this.error = e.response?.data?.message || "Error loading followed vehicles";

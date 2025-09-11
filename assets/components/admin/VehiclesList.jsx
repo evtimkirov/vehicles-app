@@ -15,9 +15,9 @@ const VehiclesList = observer(() => {
         <div>
             <h2>All Vehicles</h2>
             <ul>
-                {vehicleStore.vehicles.map((v) => (
-                    <li key={v.id}>
-                        <Link to={`/vehicles/${v.id}`}>{v.name}</Link>
+                {vehicleStore.vehicles.map((vehicle) => (
+                    <li key={vehicle.id}>
+                        <Link to={`/vehicles/${vehicle.id}`}>{vehicle.brand} {vehicle.model}</Link>
                     </li>
                 ))}
             </ul>

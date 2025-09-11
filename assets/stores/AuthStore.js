@@ -10,11 +10,19 @@ class AuthStore {
 
     constructor() {
         makeAutoObservable(this);
+
+        const token = localStorage.getItem("auth_token");
+
+        if (token) {
+            this.token = token;
+            this.user = {};
+        }
     }
 
     login = async (email, password) => {
         this.loading = true;
         this.error = null;
+        this.token = null;
 
         try {
             const response = await api.post(
@@ -22,9 +30,14 @@ class AuthStore {
                 { email, password }
             );
 
+            this.token = response.data.token;
+            this.user = { email };
+
             localStorage.setItem("auth_token", response.data.token);
         } catch (e) {
             this.error = e.response?.data?.message || "Invalid credentials";
+
+            localStorage.removeItem("auth_token");
         } finally {
             this.loading = false;
         }
