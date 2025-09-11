@@ -8,7 +8,6 @@ class AuthStore {
     error = null;
     message = null;
     token = null;
-    role = null;
 
     constructor() {
         makeAutoObservable(this);
