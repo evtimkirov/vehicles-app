@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Vehicle;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -13,6 +14,8 @@ class UserController extends AbstractController
 {
     /**
      * List with the followed vehicles by logged-in user
+     *
+     * @return JsonResponse
      */
     public function listFollowed(): JsonResponse
     {
@@ -37,6 +40,10 @@ class UserController extends AbstractController
 
     /**
      * Follow a vehicle
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return JsonResponse
      */
     public function follow(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
@@ -73,6 +80,10 @@ class UserController extends AbstractController
 
     /**
      * Unfollow a vehicle
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return JsonResponse
      */
     public function unfollow(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
@@ -105,5 +116,19 @@ class UserController extends AbstractController
                 'vehicle_id' => $vehicleId,
             ]
         ]);
+    }
+
+    /**
+     * Get current user role
+     *
+     * @param Security $security
+     * @return JsonResponse
+     */
+    public function getRole(Security $security): JsonResponse
+    {
+        $user = $security->getUser();
+        if (!$user) return $this->json(['message' => 'Unauthorized'], 401);
+
+        return $this->json(['role' => $user->getRoles()[0]]);
     }
 }

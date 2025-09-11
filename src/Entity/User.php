@@ -25,6 +25,7 @@ use App\Controller\Api\ForgotPasswordController;
 
         new Get(), // GET /users/{id}
         new Get(uriTemplate: '/users/{id}/vehicles', controller: UserController::class . '::getUserVehicles'),
+        new Get(uriTemplate: '/users/role', controller: UserController::class . '::getRole'),
 
         // Follow / Unfollow
         new Post(uriTemplate: '/users/vehicles/follow', controller: UserController::class . '::follow'),
