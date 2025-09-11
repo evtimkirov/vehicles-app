@@ -73,10 +73,10 @@ const VehicleForm = observer(() => {
 
                 {/* Vehicle type */}
                 <select value={type} onChange={(e) => setType(e.target.value)}>
-                    <option value="Car">Car</option>
-                    <option value="Motorcycle">Motorcycle</option>
-                    <option value="Trailer">Trailer</option>
-                    <option value="Truck">Truck</option>
+                    <option value="car">Car</option>
+                    <option value="motorcycle">Motorcycle</option>
+                    <option value="trailer">Trailer</option>
+                    <option value="truck">Truck</option>
                 </select>
 
                 {/* Dynamic fields depend on their type */}

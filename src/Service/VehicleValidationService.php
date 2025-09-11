@@ -32,9 +32,32 @@ class VehicleValidationService
             return ['type' => 'This field is required.'];
         }
 
+        if (isset($data['price'])) {
+            $data['price'] = (float) $data['price'];
+        }
+        if (isset($data['quantity'])) {
+            $data['quantity'] = (int) $data['quantity'];
+        }
+        if (isset($data['engine_capacity'])) {
+            $data['engine_capacity'] = (float) $data['engine_capacity'];
+        }
+        if (isset($data['doors'])) {
+            $data['doors'] = (int) $data['doors'];
+        }
+        if (isset($data['beds'])) {
+            $data['beds'] = (int) $data['beds'];
+        }
+        if (isset($data['axles'])) {
+            $data['axles'] = (int) $data['axles'];
+        }
+        if (isset($data['load_capacity'])) {
+            $data['load_capacity'] = (float) $data['load_capacity'];
+        }
+
+        $data['type'] = strtolower(trim($data['type']));
+
         // Merge common and specified properties
         $fields = [
-            // базови
             'brand' => [new Assert\NotBlank(), new Assert\Length(['min' => 2, 'max' => 100])],
             'model' => [new Assert\NotBlank(), new Assert\Length(['min' => 1, 'max' => 100])],
             'price' => [new Assert\NotBlank(), new Assert\Type('numeric'), new Assert\Positive()],
@@ -94,14 +117,14 @@ class VehicleValidationService
      */
     public function createEntity(array $data, $currentUser)
     {
-        $category = CarCategory::from($data['category']);
+        $data['type'] = strtolower(trim($data['type']));
 
         $vehicle = match ($data['type']) {
             'car' => (new Car())
                 ->setEngineCapacity($data['engine_capacity'])
                 ->setColour($data['colour'])
                 ->setDoors($data['doors'])
-                ->setCategory($category),
+                ->setCategory(CarCategory::from($data['category'])),
             'motorcycle' => (new Motorcycle())
                 ->setEngineCapacity($data['engine_capacity'])
                 ->setColour($data['colour']),
@@ -112,6 +135,7 @@ class VehicleValidationService
             'trailer' => (new Trailer())
                 ->setLoadCapacity($data['load_capacity'])
                 ->setAxles($data['axles']),
+            default => throw new \InvalidArgumentException("Unsupported vehicle type: " . ($data['type'] ?? 'null')),
         };
 
         // Common properties
