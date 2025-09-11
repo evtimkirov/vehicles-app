@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { useParams } from "react-router-dom";
 import vehicleStore from "../../stores/VehicleStore";
+import InnerNavbar from "../InnerNavbar";
 
 const VehicleDetails = observer(() => {
     const { id } = useParams();
@@ -19,6 +20,7 @@ const VehicleDetails = observer(() => {
 
     return (
         <div>
+            <InnerNavbar />
             <h2>{vehicle.brand}</h2>
             <ul>
                 <li>

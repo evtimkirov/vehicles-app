@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
 import vehicleStore from "../../stores/VehicleStore";
+import InnerNavbar from "../InnerNavbar";
 
 const VehicleForm = observer(() => {
     const [type, setType] = useState("Car");
@@ -35,6 +36,7 @@ const VehicleForm = observer(() => {
 
     return (
         <div>
+            <InnerNavbar />
             <h2>Create Vehicle</h2>
             <form onSubmit={handleSubmit}>
                 {/* Common fields */}

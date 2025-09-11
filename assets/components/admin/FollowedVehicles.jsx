@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import vehicleStore from "../../stores/VehicleStore";
 import {useNavigate} from "react-router-dom";
+import InnerNavbar from "../InnerNavbar";
 
 const FollowedVehicles = observer(() => {
     const navigate = useNavigate();
@@ -12,7 +13,7 @@ const FollowedVehicles = observer(() => {
 
     const handleUnfollow = async (id) => {
         await vehicleStore.unfollowVehicle(id);
-        // след успешно unfollow редирект
+
         navigate("/vehicles/followed");
     };
 
@@ -21,6 +22,7 @@ const FollowedVehicles = observer(() => {
 
     return (
         <div>
+            <InnerNavbar />
             <h2>Followed Vehicles</h2>
             <ul>
                 {vehicleStore.followed.map((vehicle) => (

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import vehicleStore from "../../stores/VehicleStore";
 import { Link } from "react-router-dom";
+import InnerNavbar from "../InnerNavbar";
 
 const VehiclesList = observer(() => {
     useEffect(() => {
@@ -13,6 +14,7 @@ const VehiclesList = observer(() => {
 
     return (
         <div>
+            <InnerNavbar />
             <h2>All Vehicles</h2>
             <ul>
                 {vehicleStore.vehicles.map((vehicle) => (
