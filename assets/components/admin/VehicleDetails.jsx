@@ -8,6 +8,7 @@ const VehicleDetails = observer(() => {
     const { id } = useParams();
 
     useEffect(() => {
+        vehicleStore.clearMessages();
         vehicleStore.fetchVehicle(id);
     }, [id]);
 

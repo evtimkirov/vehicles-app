@@ -6,6 +6,7 @@ import InnerNavbar from "../InnerNavbar";
 
 const VehiclesList = observer(() => {
     useEffect(() => {
+        vehicleStore.clearMessages();
         vehicleStore.fetchVehicles();
     }, []);
 

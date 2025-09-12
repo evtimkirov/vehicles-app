@@ -8,6 +8,7 @@ const FollowedVehicles = observer(() => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        vehicleStore.clearMessages();
         vehicleStore.fetchFollowedVehicles();
     }, []);
 

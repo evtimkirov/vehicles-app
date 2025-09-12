@@ -1,5 +1,6 @@
-import { makeAutoObservable } from "mobx";
+import {makeAutoObservable} from "mobx";
 import api from "../utils/api";
+import { extractError } from "../utils/errors";
 import API_ROUTES from "../routes/apiRoutes";
 
 class AuthStore {
@@ -39,7 +40,8 @@ class AuthStore {
 
             await this.fetchRole();
         } catch (e) {
-            this.error = e.response?.data?.message || "Invalid credentials";
+            this.error = extractError(e, "Invalid credentials");
+
             localStorage.removeItem("auth_token");
         } finally {
             this.loading = false;
@@ -79,7 +81,7 @@ class AuthStore {
 
             this.message = response.data.message;
         } catch (e) {
-            this.error = e.response?.data?.message || "Registration failed";
+            this.error = extractError(e, "Registration failed");
         } finally {
             this.loading = false;
         }
@@ -98,7 +100,7 @@ class AuthStore {
 
             this.message = response.data.message;
         } catch (e) {
-            this.error = e.response?.data?.message || "Error sending reset link";
+            this.error = extractError(e, "Error sending reset link");
         } finally {
             this.loading = false;
         }
@@ -108,6 +110,10 @@ class AuthStore {
         this.user = null;
         this.token = null;
         localStorage.removeItem("auth_token");
+    };
+
+    clearError = () => {
+        this.error = null;
     };
 }
 

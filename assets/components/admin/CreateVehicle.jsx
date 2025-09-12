@@ -4,7 +4,7 @@ import vehicleStore from "../../stores/VehicleStore";
 import InnerNavbar from "../InnerNavbar";
 
 const VehicleForm = observer(() => {
-    const [type, setType] = useState("Car");
+    const [type, setType] = useState("car");
 
     const [formData, setFormData] = useState({
         // Common fields
@@ -82,7 +82,7 @@ const VehicleForm = observer(() => {
                 </select>
 
                 {/* Dynamic fields depend on their type */}
-                {type === "Car" && (
+                {type === "car" && (
                     <>
                         <input
                             type="number"
@@ -116,7 +116,7 @@ const VehicleForm = observer(() => {
                     </>
                 )}
 
-                {type === "Motorcycle" && (
+                {type === "motorcycle" && (
                     <>
                         <input
                             type="number"
@@ -136,7 +136,7 @@ const VehicleForm = observer(() => {
                     </>
                 )}
 
-                {type === "Trailer" && (
+                {type === "trailer" && (
                     <>
                         <input
                             type="number"
@@ -155,7 +155,7 @@ const VehicleForm = observer(() => {
                     </>
                 )}
 
-                {type === "Truck" && (
+                {type === "truck" && (
                     <>
                         <input
                             type="number"

@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import api from "../utils/api";
+import { extractError } from "../utils/errors";
 import API_ROUTES from "../routes/apiRoutes";
 
 class VehicleStore {
@@ -24,7 +25,7 @@ class VehicleStore {
 
             this.vehicles = response.data.data ?? [];
         } catch (e) {
-            this.error = e.response?.data?.message || "Error loading vehicles";
+            this.error = extractError(e, "Error loading vehicles");
         } finally {
             this.loading = false;
         }
@@ -39,7 +40,7 @@ class VehicleStore {
 
             this.vehicle = response.data.data ?? null;
         } catch (e) {
-            this.error = e.response?.data?.message || "Error loading vehicle";
+            this.error = extractError(e, "Error loading vehicle");
         } finally {
             this.loading = false;
         }
@@ -57,7 +58,7 @@ class VehicleStore {
 
             this.vehicles.push(response.data.data);
         } catch (e) {
-            this.error = e.response?.data?.message || "Error creating vehicle";
+            this.error = extractError(e, "Error creating vehicle");
         } finally {
             this.loading = false;
         }
@@ -74,7 +75,7 @@ class VehicleStore {
 
             await this.fetchFollowedVehicles();
         } catch (e) {
-            this.error = e.response?.data?.message || "Error following vehicle";
+            this.error = extractError(e, "Error following vehicle");
         } finally {
             this.loading = false;
         }
@@ -91,7 +92,7 @@ class VehicleStore {
 
             await this.fetchFollowedVehicles();
         } catch (e) {
-            this.error = e.response?.data?.message || "Error unfollowing vehicle";
+            this.error = extractError(e, "Error unfollowing vehicle");
         } finally {
             this.loading = false;
         }
@@ -107,10 +108,15 @@ class VehicleStore {
 
             this.followed = response.data.data ?? [];
         } catch (e) {
-            this.error = e.response?.data?.message || "Error loading followed vehicles";
+            this.error = extractError(e, "Error loading followed vehicles");
         } finally {
             this.loading = false;
         }
+    };
+
+    clearMessages = () => {
+        this.error = null;
+        this.message = null;
     };
 }
 
